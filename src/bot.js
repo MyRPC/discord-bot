@@ -24,7 +24,7 @@ class Bot {
                 if (!file.endsWith('.js')) return;
 
                 const Command = require(`./Commands/${file}`);
-                const cmd = new Command();
+                const cmd = new Command(this);
 
                 console.log(`Attempting to load command ${cmd.command}`);
                 
@@ -48,10 +48,6 @@ class Bot {
                 delete require.cache[require.resolve(`./Events/${file}`)];
             }
         });
-    }
-    
-    loadPlugin(plugin, ...args) {
-        plugin(this, ...args);
     }
 }
 
