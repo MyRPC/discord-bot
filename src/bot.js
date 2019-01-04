@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const Discord = require('discord.js');
 
 class Bot {
@@ -16,7 +17,7 @@ class Bot {
     }
 
     loadCommands() {
-        fs.readdir('./Commands/', (e, files) => {
+        fs.readdir(path.join(__dirname, 'Commands'), (e, files) => {
             if (e) console.warn(e);
 
             for (const file of files) {
@@ -34,7 +35,7 @@ class Bot {
     }
 
     loadEvents() {
-        fs.readdir('./Events/', (err, files) => {
+        fs.readdir(path.join(__dirname, 'Events'), (err, files) => {
             if (err) return console.error(err)
 
             for (const file of files) {
@@ -49,8 +50,8 @@ class Bot {
         });
     }
     
-    loadPlugin(plugin) {
-        plugin(this);
+    loadPlugin(plugin, ...args) {
+        plugin(this, ...args);
     }
 }
 
