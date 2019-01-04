@@ -22,6 +22,7 @@ class SetupRoles extends BaseCommand {
     }
 
 	execute(msg) {
+		if (!msg.author.hasPermission('MANAGE_SERVER')) return;
         var toSend = this.generateMessages();
         let mappedArray = [[toSend[0], false], ...toSend.slice(1).map( (msg, idx) => [msg, this.bot.config.emoji[idx]])];
         for (const mapObj of mappedArray) msg.channel.send(mapObj[0]).then(sent => {
