@@ -6,6 +6,9 @@
   "repository": "https://github.com/MyRPC/discord-bot.git",
   "author": "Landon Gravat <railinator4903@gmail.com> (railrunner16.me)",
   "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js"
+  },
   "dependencies": {
     "bufferutil": "^3.0.3",
     "discord.js": "^11.4.2",
