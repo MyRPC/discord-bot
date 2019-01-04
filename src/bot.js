@@ -48,6 +48,10 @@ class Bot {
             }
         });
     }
+    
+    loadPlugin(plugin) {
+        plugin(this);
+    }
 }
 
 module.exports = Bot;
