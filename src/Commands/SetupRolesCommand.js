@@ -14,16 +14,16 @@ class SetupRoles extends BaseCommand {
 		this.bot = bot;
 	}
 
-    generateMessages(){
+    generateMessages(msg) {
         const messages = [];
         messages.push(`**React to the messages below to receive the associated role. If you would like to remove the role, simply remove your reaction!**`);
-        for (const role of this.bot.config.roles) messages.push(`${this.bot.config.emoji[this.bot.config.roles.indexOf(role)]} React below to get the **${role}** role!`); //DONT CHANGE THIS
+        for (const role of this.bot.config.roles) messages.push(`${msg.guild.emojis.get(this.bot.config.emoji[this.bot.config.roles.indexOf(role)])} React below to get the **${role}** role!`); //DONT CHANGE THIS
         return messages;
     }
 
 	execute(msg) {
-		if (!msg.author.hasPermission('MANAGE_SERVER')) return;
-        var toSend = this.generateMessages();
+		if (!msg.member.hasPermission('MANAGE_SERVER')) return;
+        var toSend = this.generateMessages(msg);
         let mappedArray = [[toSend[0], false], ...toSend.slice(1).map( (msg, idx) => [msg, this.bot.config.emoji[idx]])];
         for (const mapObj of mappedArray) msg.channel.send(mapObj[0]).then(sent => {
             if (mapObj[1]) sent.react(mapObj[1]);
