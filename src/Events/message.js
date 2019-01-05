@@ -1,17 +1,15 @@
 module.exports = (bot, msg) => {
     if (msg.author.bot) return;
 
-    if (msg.content.toLowerCase().startsWith(bot.config.prefix)) return;
+    if (!msg.content.toLowerCase().startsWith(bot.config.prefix)) return;
     const args = msg.content.slice(bot.config.prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
-    let Cmd;
+    let cmd;
 
-    if (bot.commands.has(command)) Cmd = bot.commands.get(command);
-    else if (bot.aliases.has(command)) Cmd = bot.commands.get(bot.aliases.get(command));
+    if (bot.commands.has(command)) cmd = bot.commands.get(command);
+    else if (bot.aliases.has(command)) cmd = bot.commands.get(bot.aliases.get(command));
     else return;
 
-    if (!Cmd) return;
-    
-    const cmd = new Cmd(bot);
+    if (!cmd) return;
     cmd.execute(msg);
 };

@@ -9,7 +9,7 @@ module.exports = (bot, event) => {
 				const re = /\*\*(.+)?(?=\*\*)/;
 				const role = msg.content.match(re)[1];
 
-				if (user.id != bot.user.id){
+				if (user.id != bot.discordClient.user.id){
 					const roleObj = msg.guild.roles.find(r => r.name === role);
 					const memberObj = msg.guild.members.get(user.id);
 
