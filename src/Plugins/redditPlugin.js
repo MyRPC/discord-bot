@@ -30,7 +30,7 @@ module.exports = (bot, subreddit, channel) => {
         embed.setAuthor('reddit');
         embed.setDescription(`${data.votes} vote(s) and ${data.comments} comment(s) so far on Reddit`);
         embed.setThumbnail(data.thumbnail ? data.thumbnail : 'https://a.thumbs.redditmedia.com/cgfaT2eh3dEkaf-smovl78lAiT_MF_xHB0-AfI5UJ70.png');
-        embed.setColor('#7892da');
+        embed.setColor(this.bot.config.embedColor);
         embed.setURL(`https://redd.it/${data.id}`);
     });
 };

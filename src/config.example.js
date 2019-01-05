@@ -4,6 +4,7 @@ module.exports = {
     emoji: ['1️⃣', '2️⃣', '3️⃣'],
     staffRole: 'Staff',
     prefix: '!',
+    embedColor: '#7892da',
     reddit: {
 		userAgent: '/u/yourname and description of what this does.',
 		oauth: {

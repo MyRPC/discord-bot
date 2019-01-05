@@ -24,7 +24,7 @@ class LatestRelease extends BaseCommand {
             
             const embed = new RichEmbed;
             
-            embed.setColor('#7892da');
+            embed.setColor(this.bot.config.embedColor);
             embed.setTitle(`Release v${release.tag_name} - ${release.name}`);
             embed.setURL(release.html_url);
             embed.setDescription(release.body.replace(/\r\n/, '\n'));
