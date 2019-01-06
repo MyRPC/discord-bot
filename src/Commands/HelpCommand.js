@@ -38,7 +38,7 @@ class Help extends BaseCommand {
 		embed.setTitle('MyRPC - Commands');
 		embed.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL);
 
-		for (const category in Object.keys(categories)) {
+		for (const category of Object.keys(categories)) {
 			const categoryCommands = categories[category];
 
 			embed.addField(`${this.emotes[category]} | ${category}`, categoryCommands.map(c => `**${c}**`).join(', '));
