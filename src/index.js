@@ -6,3 +6,4 @@ const bot = new Bot('./config');
 const notifs = new NotificationsPlugin(bot, process.env.PORT);
 
 notifs.initReddit();
+notifs.initGithub();
