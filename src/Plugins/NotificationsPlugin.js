@@ -34,7 +34,7 @@ class NotificationsPlugin {
 	}
 
 	initGithub() {
-		app.post('/webhooks/github', (req, res) => {
+		this.app.post('/webhooks/github', (req, res) => {
 			// Coming soon, but for now:
 			res.sendStatus(200);
 		});
