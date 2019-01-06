@@ -1,9 +1,29 @@
 const snekfetch = require('snekfetch');
 
 class GithubApi {
-    constructor(token) {
-        this.token = token;
+    constructor(clientId, clientSecret) {
         this.apiBase = 'https://api.github.com';
+
+        require('crypto').randomBytes(48, function(err, buffer) {
+            if (err) throw err;
+
+            const loginId = buffer.toString('hex');
+            snekfetch.post(`${this.apiBase}/authorzations`, {
+                data: {
+                    scopes: [
+                        '',
+                    ],
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    note: `Login To API`,
+                    fingerPrint: loginId,
+                }
+            }).then(res => {
+                this.token = res.body.token;
+            }).catch(e => {
+                throw e;
+            });
+        });
     }
 
     getAllIssuesFromOrg(org) {

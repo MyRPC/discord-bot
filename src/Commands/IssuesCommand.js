@@ -21,7 +21,7 @@ class Issues extends BaseCommand {
 		});
 		this.bot = bot;
 		this.ghOrg = null;
-		this.github = new GithubApi(bot.config.apiKeys.github);
+		this.github = new GithubApi(bot.config.apis.github.clientId, bot.config.apis.github.clientSecret);
 	}
 
 	execute(msg, args) {

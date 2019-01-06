@@ -5,7 +5,10 @@ module.exports = {
     staffRole: 'Staff',
     prefix: '!',
 	embedColor: '#7892da',
-	apiKeys: {
-		github: '',
+	apis: {
+		github: {
+			clientId: '',
+			clientSecret: '',
+		},
 	},
 };
