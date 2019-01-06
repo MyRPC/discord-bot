@@ -8,7 +8,7 @@ module.exports = (bot, event) => {
 			if (msg.author.id == bot.discordClient.user.id){
 				const re = /\*\*(.+)?(?=\*\*)/;
 				let role;
-				if (msg.content.match(re)[1]) role = msg.content.match(re)[1];
+				if (msg.content.match(re)) role = msg.content.match(re)[1];
 				else return;
 
 				if (user.id != bot.discordClient.user.id){
