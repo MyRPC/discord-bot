@@ -20,7 +20,7 @@ class Issues extends BaseCommand {
 		
 		snekfetch.get('https://api.github.com/orgs/MyRPC').then(res => {
 			this.ghOrg = res.body;
-		});
+		}).catch(e => console.error);
 	}
 
 	execute(msg, args) {
@@ -60,7 +60,7 @@ class Issues extends BaseCommand {
 				});
 				break;
 			case 'repo':
-				const repoName = args.shift().toLowerCase();
+				const repoName = args.shift();
 				snekfetch.get(`https://api.github.com/repos/MyRPC/${repoName}/issues`).then(res => {
 					const embeds = [];
 					const issues = res.body.filter(i => i.state === 'open');
