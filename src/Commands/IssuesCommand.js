@@ -22,6 +22,7 @@ class Issues extends BaseCommand {
 	}
 
 	execute(msg, args) {
+		if (!args) return msg.channel.send(`You must use a valid subcommand. Do **${this.bot.config.prefix}issues help** for a list of commands.`);
 		snekfetch.get('https://api.github.com/orgs/MyRPC').then(res => {
 			this.ghOrg = res.body;
 		}).catch(e => {
@@ -158,19 +159,22 @@ class Issues extends BaseCommand {
 					
 					msg.channel.send(errorEmbed);
 				});
-				case 'help':
-					const embed = new RichEmbed();
-					embed.setColor(this.bot.config.embedColor);
-					embed.setTitle('Issues - Help');
-					embed.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL);
-					embed.addField('All', `Get issues from all of our repositories.\n**Usage:**\`${this.bot.config.prefix}issues all\``);
-					embed.addField('Repo', `Get issues from a specific repository.\n**Usage:**\`${this.bot.config.prefix}issues repo <repo>\``);
-					embed.addField('Get', `Get a specific issue.\n**Usage:**\`${this.bot.config.prefix}issues get <repo> <issueNum>\``);
-					embed.addField('Help', `Show this help page.\n**Usage:**\`${this.bot.config.prefix}issues help\``);
+				break;
+			case 'help':
+				const embed = new RichEmbed();
+				embed.setColor(this.bot.config.embedColor);
+				embed.setTitle('Issues - Help');
+				embed.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL);
+				embed.addField('All', `Get issues from all of our repositories.\n**Usage:**\`${this.bot.config.prefix}issues all\``);
+				embed.addField('Repo', `Get issues from a specific repository.\n**Usage:**\`${this.bot.config.prefix}issues repo <repo>\``);
+				embed.addField('Get', `Get a specific issue.\n**Usage:**\`${this.bot.config.prefix}issues get <repo> <issueNum>\``);
+				embed.addField('Help', `Show this help page.\n**Usage:**\`${this.bot.config.prefix}issues help\``);
 
-					msg.channel.send(embed);
-				default:
-					msg.channel.send(`That was not recognised as a valid subcommand. Do **${this.bot.config.prefix}issues help** for a list of commands.`)
+				msg.channel.send(embed);
+				break;
+			default:
+				msg.channel.send(`That was not recognised as a valid subcommand. Do **${this.bot.config.prefix}issues help** for a list of commands.`);
+				break;
 		}
 	}
 }
