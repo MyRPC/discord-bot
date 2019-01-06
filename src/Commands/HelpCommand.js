@@ -11,7 +11,7 @@ class Help extends BaseCommand {
                 'halp',
             ],
 			type: 'Information',
-			description: `Get repo information from repos in our GitHub org. do \`${bot.config.prefix}repo help\` for more info.`,
+			description: `Get help with bot commands.`,
 			usage: 'help',
 			guildOnly: false,
 			hidden: false,
