@@ -1,4 +1,4 @@
-const BaseCommand = require('../Structures/BaseCommand');
+const BaseCommand = require('../../Structures/BaseCommand');
 
 class Repo extends BaseCommand {
 	constructor(bot) {
@@ -17,3 +17,5 @@ class Repo extends BaseCommand {
 	execute(msg) {
 	}
 }
+
+module.exports = Repo;
