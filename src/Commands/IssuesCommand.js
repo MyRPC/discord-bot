@@ -40,7 +40,7 @@ class Issues extends BaseCommand {
 			case 'all':
 				snekfetch.get('https://api.github.com/orgs/MyRPC/issues').then(res => {
 					const embeds = [];
-					const issues = res.body.filter(i => i.state === 'open');
+					const issues = res.body.filter(i => i.state === 'open' && !i.pull_request);
 					const issueFields = [];
 
 					for (const issue of issues) issueFields.push({
@@ -85,7 +85,7 @@ class Issues extends BaseCommand {
 				const repoName = args.shift();
 				snekfetch.get(`https://api.github.com/repos/MyRPC/${repoName}/issues`).then(res => {
 					const embeds = [];
-					const issues = res.body.filter(i => i.state === 'open');
+					const issues = res.body.filter(i => i.state === 'open' && !i.pull_request);
 					let issueFields = [];
 
 					for (const issue of issues) issueFields.push({
@@ -128,6 +128,36 @@ class Issues extends BaseCommand {
 					msg.channel.send(errorEmbed);
 				});
 				break;
+			case 'get':
+				const repoName2 = args.shift();
+				const issueNumber = args.shift();
+				snekfetch.get(`https://api.github.com/repos/MyRPC/${repoName2}/issues/${issueNumber}`).then(res => {
+					const issue = res.body;
+					
+					const embed = new RichEmbed();
+					embed.setURL(issue.html_url);
+					embed.setTitle(`[MyRPC/${repoName2}] - #${issueNumber}: ${issue.title}`);
+					embed.setDescription(truncateString(issue.body, 1022));
+					embed.setColor(this.bot.config.embedColor);
+					embed.setAuthor(issue.user.login, issue.user.avatar_url, issue.user.html_url);
+					embed.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL);
+					embed.addField('Comments', issue.comments, true);
+					embed.addField('Locked?', issue.locked ? 'Yes' : 'No', true);
+					if (issue.locked) embed.addField('Lock Reason', issue.active_lock_reason);
+					embed.addField('Labels', issue.labels.length ? issue.labels.map(l => `\`${l.name}\``).join(', ') : 'None');
+					
+					msg.channel.send(embed);
+				}).catch(e => {
+					const errorEmbed = new RichEmbed()
+					.setTitle('ERROR')
+					.setDescription(`\`\`\`${e}\`\`\``)
+					.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL)
+					.setTimestamp(new Date())
+					.setColor('#dd4535')
+					.addField('Stack Trace', `\`\`\`${e.stack}\`\`\``);
+					
+					msg.channel.send(errorEmbed);
+				});
 		}
 	}
 }
