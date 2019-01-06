@@ -10,8 +10,10 @@
     "start": "node src/index.js"
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
     "bufferutil": "^3.0.3",
     "discord.js": "^11.4.2",
+    "express": "^4.16.4",
     "snekfetch": "^4.0.4",
     "snoostorm": "^0.0.5",
     "snoowrap": "^1.15.2",
