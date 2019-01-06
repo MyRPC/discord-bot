@@ -1,3 +1,4 @@
+const { RichEmbed } = require('discord.js');
 const BaseCommand = require('../Structures/BaseCommand');
 
 class Help extends BaseCommand {
