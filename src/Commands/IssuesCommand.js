@@ -31,9 +31,6 @@ class Issues extends BaseCommand {
 			.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL)
 			.setTimestamp(new Date())
 			.setColor('#dd4535')
-			.addField('Info', `**Filename:** __${e.fileName}__
-**Line Number:** __${e.lineNumber}__
-**Column Number:** __${e.columnNumber}__`)
 			.addField('Stack Trace', `\`\`\`${e.stack}\`\`\``);
 			
 			msg.channel.send(errorEmbed);
@@ -79,9 +76,6 @@ class Issues extends BaseCommand {
 					.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL)
 					.setTimestamp(new Date())
 					.setColor('#dd4535')
-					.addField('Info', `**Filename:** __${e.fileName}__
-**Line Number:** __${e.lineNumber}__
-**Column Number:** __${e.columnNumber}__`)
 					.addField('Stack Trace', `\`\`\`${e.stack}\`\`\``);
 					
 					msg.channel.send(errorEmbed);
@@ -101,7 +95,7 @@ class Issues extends BaseCommand {
 
 					issueFields = chunk(issueFields, 10);
 
-					const page = 1;
+					let page = 1;
 					for (const issueList of issueFields) {
 						const embed = new RichEmbed();
 						
@@ -113,6 +107,8 @@ class Issues extends BaseCommand {
 						for (const issue of issueList) embed.addField(issue.name, issue.value);
 						
 						embeds.push(embed);
+						
+						page++;
 					}
 					
 					new EmbedsMode()
@@ -127,9 +123,6 @@ class Issues extends BaseCommand {
 					.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL)
 					.setTimestamp(new Date())
 					.setColor('#dd4535')
-					.addField('Info', `**Filename:** __${e.fileName}__
-**Line Number:** __${e.lineNumber}__
-**Column Number:** __${e.columnNumber}__`)
 					.addField('Stack Trace', `\`\`\`${e.stack}\`\`\``);
 					
 					msg.channel.send(errorEmbed);
