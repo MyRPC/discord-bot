@@ -4,7 +4,7 @@ const snekfetch = require('snekfetch');
 const { RichEmbed } = require('discord.js');
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const chunk = require('lodash.chunk');
-const truncate = require('lodash.truncate');
+const truncateString = require('../Utils/truncateString');
 
 class Issues extends BaseCommand {
 	constructor(bot) {
@@ -45,7 +45,7 @@ class Issues extends BaseCommand {
 
 					for (const issue of issues) issueFields.push({
 						name: `[${issue.repository.full_name}] - #${issue.number}: ${issue.title}`,
-						value: `${truncate(issue.body, 300)}\n**[View On GitHub](${issue.html_url})`,
+						value: `${truncateString(issue.body, 300)}\n**[View On GitHub](${issue.html_url})**`,
 					});
 
 					issueFields = chunk(issueFields, 10);
@@ -90,7 +90,7 @@ class Issues extends BaseCommand {
 
 					for (const issue of issues) issueFields.push({
 						name: `[MyRPC/${repoName}] - #${issue.number}: ${issue.title}`,
-						value: `${truncate(issue.body, 300)}\n**[View On GitHub](${issue.html_url})`,
+						value: `${truncateString(issue.body, 300)}\n**[View On GitHub](${issue.html_url})**`,
 					});
 
 					issueFields = chunk(issueFields, 10);

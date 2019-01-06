@@ -179,11 +179,6 @@ lodash.chunk@^4.2.0:
   resolved "https://registry.yarnpkg.com/lodash.chunk/-/lodash.chunk-4.2.0.tgz#66e5ce1f76ed27b4303d8c6512e8d1216e8106bc"
   integrity sha1-ZuXOH3btJ7QwPYxlEujRIW6BBrw=
 
-lodash.truncate@^4.4.2:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/lodash.truncate/-/lodash.truncate-4.4.2.tgz#5a350da0b1113b837ecfffd5812cbe58d6eae193"
-  integrity sha1-WjUNoLERO4N+z//VgSy+WNbq4ZM=
-
 long@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
