@@ -11,5 +11,5 @@ module.exports = (bot, msg) => {
     else return;
 
     if (!cmd) return;
-    cmd.execute(msg);
+    cmd.execute(msg, args);
 };
