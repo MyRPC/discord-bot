@@ -10,10 +10,9 @@ class Help extends BaseCommand {
                 'commands',
                 'halp',
             ],
-			type: 'Information',
+			category: 'Information',
 			description: `Get help with bot commands.`,
 			usage: 'help',
-			category: 'Information',
 			guildOnly: false,
 			hidden: false,
 		});
@@ -39,7 +38,11 @@ class Help extends BaseCommand {
 		embed.setTitle('MyRPC - Commands');
 		embed.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL);
 
-		for (const categoryCommands of categories) embed.addField(`${this.emotes[category]} | ${category}`, categoryCommands.map(c => `**${c}**`).join(', '));
+		for (const category in Object.keys(categories)) {
+			const categoryCommands = categories[category];
+
+			embed.addField(`${this.emotes[category]} | ${category}`, categoryCommands.map(c => `**${c}**`).join(', '));
+		}
 
 		msg.channel.send(embed);
 	}
