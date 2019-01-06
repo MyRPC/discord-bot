@@ -5,7 +5,7 @@ class GithubApi {
         this.apiBase = 'https://api.github.com';
 
         require('crypto').randomBytes(48, function(err, buffer) {
-            if (err) throw err;
+            if (err) console.warn(err);
 
             const loginId = buffer.toString('hex');
             snekfetch.post(`${this.apiBase}/authorzations`, {
@@ -23,9 +23,7 @@ class GithubApi {
                 }
             }).then(res => {
                 this.token = res.body.token;
-            }).catch(e => {
-                throw e;
-            });
+            }).catch(e => console.warn);
         });
     }
 
