@@ -86,7 +86,7 @@ class Issues extends BaseCommand {
 				snekfetch.get(`https://api.github.com/repos/MyRPC/${repoName}/issues`).then(res => {
 					const embeds = [];
 					const issues = res.body.filter(i => i.state === 'open');
-					const issueFields = [];
+					let issueFields = [];
 
 					for (const issue of issues) issueFields.push({
 						name: `[MyRPC/${repoName}] - #${issue.number}: ${issue.title}`,
