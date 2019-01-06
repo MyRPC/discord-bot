@@ -95,7 +95,7 @@ class Issues extends BaseCommand {
 					const issueFields = [];
 
 					for (const issue of issues) issueFields.push({
-						name: `[${issue.repository.full_name}] - #${issue.number}: ${issue.title}`,
+						name: `[MyRPC/${repoName}] - #${issue.number}: ${issue.title}`,
 						value: `${truncate(issue.body, 300)}\n**[View On GitHub](${issue.html_url})`,
 					});
 
