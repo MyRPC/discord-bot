@@ -11,7 +11,10 @@ class GithubApi {
             snekfetch.post(`${this.apiBase}/authorzations`, {
                 data: {
                     scopes: [
-                        '',
+                        'repo',
+                        'admin:org',
+                        'user',
+                        'gists',
                     ],
                     client_id: clientId,
                     client_secret: clientSecret,
