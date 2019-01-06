@@ -1,4 +1,6 @@
 const BaseCommand = require('../Structures/BaseCommand');
+const ErrorEmbed = require('../Structures/ErrorEmbed');
+
 const snekfetch = require('snekfetch');
 const { RichEmbed } = require('discord.js');
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
@@ -17,13 +19,27 @@ class Issues extends BaseCommand {
 			hidden: false,
 		});
 		this.bot = bot;
-		
-		snekfetch.get('https://api.github.com/orgs/MyRPC').then(res => {
-			this.ghOrg = res.body;
-		}).catch(e => console.error);
+		this.ghOrg = null;
 	}
 
 	execute(msg, args) {
+		snekfetch.get('https://api.github.com/orgs/MyRPC').then(res => {
+			this.ghOrg = res.body;
+		}).catch(e => {
+			const errorEmbed = new RichEmbed({
+				title: 'ERROR',
+				description: `\`\`\`${e}\`\`\``,
+				timestamp: new Date(),
+				color: 14501173,
+				footer: {
+					text: '© MyRPC',
+					icon_url: this.bot.discordClient.user.displayAvatarURL,
+				},
+			});
+			
+			msg.channel.send(errorEmbed);
+		});
+		
 		switch (args.shift().toLowerCase()) {
 			case 'all':
 				snekfetch.get('https://api.github.com/orgs/MyRPC/issues').then(res => {
@@ -57,6 +73,19 @@ class Issues extends BaseCommand {
 						.setAuthorizedUsers([msg.author.id])
 						.setChannel(msg.channel)
 						.build();
+				}).catch(e => {
+					const errorEmbed = new RichEmbed({
+						title: 'ERROR',
+						description: `\`\`\`${e}\`\`\``,
+						timestamp: new Date(),
+						color: 14501173,
+						footer: {
+							text: '© MyRPC',
+							icon_url: this.bot.discordClient.user.displayAvatarURL,
+						},
+					});
+					
+					msg.channel.send(errorEmbed);
 				});
 				break;
 			case 'repo':
@@ -93,9 +122,16 @@ class Issues extends BaseCommand {
 						.setChannel(msg.channel)
 						.build();
 				}).catch(e => {
-					const errorEmbed = new RichEmbed()
-					.setColor(this.bot.config.embedColor)
-					.setDescription(`**Unable to find repo \`${repoName}\` in the \`MyRPC\` org.**`);
+					const errorEmbed = new RichEmbed({
+						title: 'ERROR',
+						description: `\`\`\`${e}\`\`\``,
+						timestamp: new Date(),
+						color: 14501173,
+						footer: {
+							text: '© MyRPC',
+							icon_url: this.bot.discordClient.user.displayAvatarURL,
+						},
+					});
 					
 					msg.channel.send(errorEmbed);
 				});
