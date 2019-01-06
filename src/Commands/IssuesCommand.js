@@ -31,7 +31,10 @@ class Issues extends BaseCommand {
 			.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL)
 			.setTimestamp(new Date())
 			.setColor('#dd4535')
-			.addField('Stack Trace', Error.captureStackTrace(e));
+			.addField('Info', `**Filename:** __${e.fileName}__
+**Line Number:** __${e.lineNumber}__
+**Column Number:** __${e.columnNumber}__`)
+			.addField('Stack Trace', `\`\`\`${e.stack}\`\`\``);
 			
 			msg.channel.send(errorEmbed);
 		});
@@ -76,7 +79,10 @@ class Issues extends BaseCommand {
 					.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL)
 					.setTimestamp(new Date())
 					.setColor('#dd4535')
-					.addField('Stack Trace', Error.captureStackTrace(e));
+					.addField('Info', `**Filename:** __${e.fileName}__
+**Line Number:** __${e.lineNumber}__
+**Column Number:** __${e.columnNumber}__`)
+					.addField('Stack Trace', `\`\`\`${e.stack}\`\`\``);
 					
 					msg.channel.send(errorEmbed);
 				});
@@ -121,7 +127,10 @@ class Issues extends BaseCommand {
 					.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL)
 					.setTimestamp(new Date())
 					.setColor('#dd4535')
-					.addField('Stack Trace', Error.captureStackTrace(e));
+					.addField('Info', `**Filename:** __${e.fileName}__
+**Line Number:** __${e.lineNumber}__
+**Column Number:** __${e.columnNumber}__`)
+					.addField('Stack Trace', `\`\`\`${e.stack}\`\`\``);
 					
 					msg.channel.send(errorEmbed);
 				});
