@@ -30,8 +30,11 @@ class GithubApi {
     getAllIssuesFromOrg(org) {
         return new Promise((resolve, reject) => {
             snekfetch
-            .set('Authorization', `token ${this.token}`)
-            .get(`${this.apiBase}/orgs/${org}/issues`)
+            .get(`${this.apiBase}/orgs/${org}/issues`, {
+                headers: {
+                    Authorization: `token ${this.token}`,
+                },
+            })
             .then(res => resolve(res.body))
             .catch(err => reject(err));
         });
@@ -40,8 +43,11 @@ class GithubApi {
     getAllIssuesFromRepo(user, repo) {
         return new Promise((resolve, reject) => {
             snekfetch
-            .set('Authorization', `token ${this.token}`)
-            .get(`${this.apiBase}/repos/${user}/${repo}/issues`)
+            .get(`${this.apiBase}/repos/${user}/${repo}/issues`, {
+                headers: {
+                    Authorization: `token ${this.token}`,
+                },
+            })
             .then(res => resolve(res.body))
             .catch(err => reject(err));
         });
@@ -50,8 +56,11 @@ class GithubApi {
     getAllIssuesFromRepoByNumber(user, repo, number) {
         return new Promise((resolve, reject) => {
             snekfetch
-            .set('Authorization', `token ${this.token}`)
-            .get(`${this.apiBase}/repos/${user}/${repo}/issues/${number}`)
+            .get(`${this.apiBase}/repos/${user}/${repo}/issues/${number}`, {
+                headers: {
+                    Authorization: `token ${this.token}`,
+                },
+            })
             .then(res => resolve(res.body))
             .catch(err => reject(err));
         });
@@ -60,8 +69,11 @@ class GithubApi {
     getOrg(org) {
         return new Promise((resolve, reject) => {
             snekfetch
-            .set('Authorization', `token ${this.token}`)
-            .get(`${this.apiBase}/orgs/${org}`)
+            .get(`${this.apiBase}/orgs/${org}`, {
+                headers: {
+                    Authorization: `token ${this.token}`,
+                },
+            })
             .then(res => resolve(res.body))
             .catch(err => reject(err));
         });
