@@ -14,7 +14,7 @@ class NotificationsPlugin {
 	}
 	
 	initReddit() {
-		this.app.post('/reddit/:channel', (req, res) => {
+		this.app.post('/webhooks/reddit/:channel', (req, res) => {
 			const embed = new RichEmbed(req.body);
 			embed.setColor(this.bot.config.embedColor);
 			embed.setAuthor('Reddit', 'https://i.railrunner16.me/xzAam9h.png');
@@ -30,6 +30,13 @@ class NotificationsPlugin {
 					err: e
 				});
 			});
+		});
+	}
+
+	initGithub() {
+		app.post('/webhooks/github', (req, res) => {
+			// Coming soon, but for now:
+			res.sendStatus(200);
 		});
 	}
 }
