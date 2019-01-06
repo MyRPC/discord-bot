@@ -1,5 +1,4 @@
 const BaseCommand = require('../Structures/BaseCommand');
-const ErrorEmbed = require('../Structures/ErrorEmbed');
 
 const snekfetch = require('snekfetch');
 const { RichEmbed } = require('discord.js');
