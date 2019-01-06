@@ -13,6 +13,7 @@ class Help extends BaseCommand {
 			type: 'Information',
 			description: `Get help with bot commands.`,
 			usage: 'help',
+			category: 'Information',
 			guildOnly: false,
 			hidden: false,
 		});
@@ -27,7 +28,7 @@ class Help extends BaseCommand {
 
 	execute(msg) {
 		const categories = {};
-		this.bot.commands.filter((command) => !command.hidden).forEach((command) => {
+		this.bot.commands.filter(command => !command.hidden).forEach(command => {
 			if (!(command.category in categories)) categories[command.category] = [];
 			categories[command.category].push(command.command);
 		});
@@ -38,11 +39,7 @@ class Help extends BaseCommand {
 		embed.setTitle('MyRPC - Commands');
 		embed.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL);
 
-		for (const category in categories) {
-			const categoryCommands = categories[category];
-
-			embed.addField(`${this.emotes[category]} | ${category}`, categoryCommands.map(c => `**${c}**`).join(', '));
-		}
+		for (const categoryCommands of categories) embed.addField(`${this.emotes[category]} | ${category}`, categoryCommands.map(c => `**${c}**`).join(', '));
 
 		msg.channel.send(embed);
 	}

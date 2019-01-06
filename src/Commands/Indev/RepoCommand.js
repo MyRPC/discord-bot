@@ -8,6 +8,7 @@ class Repo extends BaseCommand {
 			type: 'Info',
 			description: `Get repo information from repos in our GitHub org. do \`${bot.config.prefix}repo help\` for more info.`,
 			usage: 'repo help',
+			category: 'Information',
 			guildOnly: false,
 			hidden: false,
 		});

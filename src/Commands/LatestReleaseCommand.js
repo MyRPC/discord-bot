@@ -11,7 +11,7 @@ class LatestRelease extends BaseCommand {
             ],
             description: 'Get information on the latest GitHub release.',
             usage: 'latest-release',
-            category: 'Info',
+			category: 'Information',
             hidden: false,
             guildOnly: false,
         });
