@@ -1,4 +1,4 @@
-const BaseCommand = require('../../Structures/BaseCommand');
+const BaseCommand = require('../Structures/BaseCommand');
 const snekfetch = require('snekfetch');
 const { RichEmbed } = require('discord.js');
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
