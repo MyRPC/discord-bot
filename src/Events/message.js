@@ -1,3 +1,5 @@
+const createErrorEmbed = require('../Utils/createErrorEmbed');
+
 module.exports = (bot, msg) => {
     if (msg.author.bot) return;
 
@@ -11,5 +13,10 @@ module.exports = (bot, msg) => {
     else return;
 
     if (!cmd) return;
-    cmd.execute(msg, args);
+    try {
+        cmd.execute(msg, args);
+    } catch (e) {
+		const errorEmbed = createErrorEmbed(this.bot, e)
+		msg.channel.send(errorEmbed);
+    }
 };

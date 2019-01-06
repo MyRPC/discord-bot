@@ -1,10 +1,12 @@
 const BaseCommand = require('../Structures/BaseCommand');
+const truncateString = require('../Utils/truncateString');
+const createErrorEmbed = require('../Utils/createErrorEmbed');
+const GithubApi = require('../Utils/GithubApi');
 
 const snekfetch = require('snekfetch');
 const { RichEmbed } = require('discord.js');
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const chunk = require('lodash.chunk');
-const truncateString = require('../Utils/truncateString');
 
 class Issues extends BaseCommand {
 	constructor(bot) {
@@ -19,29 +21,23 @@ class Issues extends BaseCommand {
 		});
 		this.bot = bot;
 		this.ghOrg = null;
+		this.github = new GithubApi(bot.config.apiKeys.github);
 	}
 
 	execute(msg, args) {
 		if (!args) return msg.channel.send(`You must use a valid subcommand. Do **${this.bot.config.prefix}issues help** for a list of commands.`);
-		snekfetch.get('https://api.github.com/orgs/MyRPC').then(res => {
-			this.ghOrg = res.body;
+		this.github.getOrg('MyRPC').then(org => {
+			this.ghOrg = org;
 		}).catch(e => {
-			const errorEmbed = new RichEmbed()
-			.setTitle('ERROR')
-			.setDescription(`\`\`\`${e}\`\`\``)
-			.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL)
-			.setTimestamp(new Date())
-			.setColor('#dd4535')
-			.addField('Stack Trace', `\`\`\`${e.stack}\`\`\``);
-			
+			const errorEmbed = createErrorEmbed(this.bot, e)
 			msg.channel.send(errorEmbed);
 		});
 		
 		switch (args.shift().toLowerCase()) {
 			case 'all':
-				snekfetch.get('https://api.github.com/orgs/MyRPC/issues').then(res => {
+				this.github.getAllIssuesFromOrg('MyRPC').then(issues => {
 					const embeds = [];
-					const issues = res.body.filter(i => i.state === 'open' && !i.pull_request);
+					issues = issues.filter(i => i.state === 'open' && !i.pull_request);
 					const issueFields = [];
 
 					for (const issue of issues) issueFields.push({
@@ -71,22 +67,15 @@ class Issues extends BaseCommand {
 						.setChannel(msg.channel)
 						.build();
 				}).catch(e => {
-					const errorEmbed = new RichEmbed()
-					.setTitle('ERROR')
-					.setDescription(`\`\`\`${e}\`\`\``)
-					.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL)
-					.setTimestamp(new Date())
-					.setColor('#dd4535')
-					.addField('Stack Trace', `\`\`\`${e.stack}\`\`\``);
-					
+					const errorEmbed = createErrorEmbed(this.bot, e)
 					msg.channel.send(errorEmbed);
 				});
 				break;
 			case 'repo':
 				const repoName = args.shift();
-				snekfetch.get(`https://api.github.com/repos/MyRPC/${repoName}/issues`).then(res => {
+				this.github.getAllIssuesFromRepo('MyRPC', repoName).then(issues => {
 					const embeds = [];
-					const issues = res.body.filter(i => i.state === 'open' && !i.pull_request);
+					issues = issues.filter(i => i.state === 'open' && !i.pull_request);
 					let issueFields = [];
 
 					for (const issue of issues) issueFields.push({
@@ -118,23 +107,14 @@ class Issues extends BaseCommand {
 						.setChannel(msg.channel)
 						.build();
 				}).catch(e => {
-					const errorEmbed = new RichEmbed()
-					.setTitle('ERROR')
-					.setDescription(`\`\`\`${e}\`\`\``)
-					.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL)
-					.setTimestamp(new Date())
-					.setColor('#dd4535')
-					.addField('Stack Trace', `\`\`\`${e.stack}\`\`\``);
-					
+					const errorEmbed = createErrorEmbed(this.bot, e)
 					msg.channel.send(errorEmbed);
 				});
 				break;
 			case 'get':
 				const repoName2 = args.shift();
 				const issueNumber = args.shift();
-				snekfetch.get(`https://api.github.com/repos/MyRPC/${repoName2}/issues/${issueNumber}`).then(res => {
-					const issue = res.body;
-					
+				this.github.getAllIssuesFromRepoByNumber('MyRPC', repoName2, issueNumber).then(issue => {
 					const embed = new RichEmbed();
 					embed.setURL(issue.html_url);
 					embed.setTitle(`[MyRPC/${repoName2}] - #${issueNumber}: ${issue.title}`);
@@ -149,14 +129,7 @@ class Issues extends BaseCommand {
 					
 					msg.channel.send(embed);
 				}).catch(e => {
-					const errorEmbed = new RichEmbed()
-					.setTitle('ERROR')
-					.setDescription(`\`\`\`${e}\`\`\``)
-					.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL)
-					.setTimestamp(new Date())
-					.setColor('#dd4535')
-					.addField('Stack Trace', `\`\`\`${e.stack}\`\`\``);
-					
+					const errorEmbed = createErrorEmbed(this.bot, e)
 					msg.channel.send(errorEmbed);
 				});
 				break;
