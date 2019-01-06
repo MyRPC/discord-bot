@@ -25,16 +25,13 @@ class Issues extends BaseCommand {
 		snekfetch.get('https://api.github.com/orgs/MyRPC').then(res => {
 			this.ghOrg = res.body;
 		}).catch(e => {
-			const errorEmbed = new RichEmbed({
-				title: 'ERROR',
-				description: `\`\`\`${e}\`\`\``,
-				timestamp: new Date(),
-				color: 14501173,
-				footer: {
-					text: '© MyRPC',
-					icon_url: this.bot.discordClient.user.displayAvatarURL,
-				},
-			});
+			const errorEmbed = new RichEmbed()
+			.setTitle('ERROR')
+			.setDescription(`\`\`\`${e}\`\`\``)
+			.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL)
+			.setTimestamp(new Date())
+			.setColor('#dd4535')
+			.addField('Stack Trace', Error.captureStackTrace(e));
 			
 			msg.channel.send(errorEmbed);
 		});
@@ -73,16 +70,13 @@ class Issues extends BaseCommand {
 						.setChannel(msg.channel)
 						.build();
 				}).catch(e => {
-					const errorEmbed = new RichEmbed({
-						title: 'ERROR',
-						description: `\`\`\`${e}\`\`\``,
-						timestamp: new Date(),
-						color: 14501173,
-						footer: {
-							text: '© MyRPC',
-							icon_url: this.bot.discordClient.user.displayAvatarURL,
-						},
-					});
+					const errorEmbed = new RichEmbed()
+					.setTitle('ERROR')
+					.setDescription(`\`\`\`${e}\`\`\``)
+					.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL)
+					.setTimestamp(new Date())
+					.setColor('#dd4535')
+					.addField('Stack Trace', Error.captureStackTrace(e));
 					
 					msg.channel.send(errorEmbed);
 				});
@@ -121,16 +115,13 @@ class Issues extends BaseCommand {
 						.setChannel(msg.channel)
 						.build();
 				}).catch(e => {
-					const errorEmbed = new RichEmbed({
-						title: 'ERROR',
-						description: `\`\`\`${e}\`\`\``,
-						timestamp: new Date(),
-						color: 14501173,
-						footer: {
-							text: '© MyRPC',
-							icon_url: this.bot.discordClient.user.displayAvatarURL,
-						},
-					});
+					const errorEmbed = new RichEmbed()
+					.setTitle('ERROR')
+					.setDescription(`\`\`\`${e}\`\`\``)
+					.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL)
+					.setTimestamp(new Date())
+					.setColor('#dd4535')
+					.addField('Stack Trace', Error.captureStackTrace(e));
 					
 					msg.channel.send(errorEmbed);
 				});
