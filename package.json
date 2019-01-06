@@ -13,8 +13,6 @@
     "bufferutil": "^3.0.3",
     "discord.js": "^11.4.2",
     "snekfetch": "^4.0.4",
-    "snoostorm": "^0.0.5",
-    "snoowrap": "^1.15.2",
     "uws": "^9.14.0"
   }
 }

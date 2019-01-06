@@ -8,7 +8,7 @@ class SetupRoles extends BaseCommand {
 			description: 'Sets up reaction roles',
 			category: 'Moderator',
 			usage: 'setup-roles',
-			hidden: false,
+			hidden: true,
 			guildOnly: true
 		});
 		this.bot = bot;
