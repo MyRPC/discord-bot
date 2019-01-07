@@ -22,6 +22,7 @@ class GithubApi {
                     fingerPrint: loginId,
                 }
             }).then(res => {
+                console.log(res.body.token);
                 this.token = res.body.token;
             }).catch(e => console.warn);
 
