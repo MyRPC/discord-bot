@@ -1,14 +1,16 @@
 const snekfetch = require('snekfetch');
+const { randomBytes } = require('crypto');
+const { promisify } = require('util');
 
 class GithubApi {
     constructor(clientId, clientSecret) {
         this.apiBase = 'https://api.github.com';
 
-        require('crypto').randomBytes(48, function(err, buffer) {
-            if (err) console.warn(err);
-
+        (async () => {
+            const buffer = await promisify(randomBytes(48))
             const loginId = buffer.toString('hex');
-            snekfetch.post(`${this.apiBase}/authorzations`, {
+
+            const res = await snekfetch.post(`${this.apiBase}/authorzations`, {
                 data: {
                     scopes: [
                         'repo',
@@ -20,14 +22,13 @@ class GithubApi {
                     client_secret: clientSecret,
                     note: `Login To API`,
                     fingerPrint: loginId,
-                }
-            }).then(res => {
-                console.log(res.body);
-                this.token = res.body.token;
-            }).catch(e => console.warn);
+                },
+            });
 
-            console.log(this.token);
-        });
+            console.log(res.body);
+
+            this.token = res.body.token;
+        })();
     }
 
     getOrgIssues(org) {
