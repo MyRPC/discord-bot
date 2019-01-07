@@ -2,8 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { RichEmbed } = require('discord.js');
 
-const GithubApi = require('../Utils/GithubApi')
-
 class NotificationsPlugin {
 	constructor(bot, port = 3000) {
 		this.bot = bot;

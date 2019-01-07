@@ -33,7 +33,7 @@ class Issues extends BaseCommand {
 		
 		switch (args.shift().toLowerCase()) {
 			case 'all':
-				let {data: issues } = await this.bot.octokit.issues.listForOrg({
+				let { data: issues } = await this.bot.octokit.issues.listForOrg({
 					org: 'MyRPC', 
 					state: 'open'
 				});
