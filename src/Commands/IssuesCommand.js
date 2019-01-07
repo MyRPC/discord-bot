@@ -86,20 +86,20 @@ class Issues extends BaseCommand {
 
 				issueFields2 = chunk(issueFields, 10);
 
-				let page = 1;
+				let page2 = 1;
 				for (const issueList of issueFields) {
 					const embed = new RichEmbed();
 					
 					embed.setColor(this.bot.config.embedColor);
-					embed.setTitle(`MyRPC/${repoName} Issues - Page ${page}`);
-					embed.setFooter(`© MyRPC | Page ${page}`, this.bot.discordClient.user.displayAvatarURL);
+					embed.setTitle(`MyRPC/${repoName} Issues - Page ${page2}`);
+					embed.setFooter(`© MyRPC | Page ${page2}`, this.bot.discordClient.user.displayAvatarURL);
 					embed.setThumbnail(this.ghOrg.avatar_url);
 					
 					for (const issue of issueList) embed.addField(issue.name, issue.value);
 					
 					embeds2.push(embed);
 					
-					page++;
+					page2++;
 				}
 				
 				new EmbedsMode()
