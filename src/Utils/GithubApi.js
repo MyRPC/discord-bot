@@ -24,6 +24,8 @@ class GithubApi {
             }).then(res => {
                 this.token = res.body.token;
             }).catch(e => console.warn);
+
+            console.log(this.token);
         });
     }
 
@@ -81,11 +83,13 @@ class GithubApi {
 
     getIssueComments(owner, repo, number) {
         return new Promise((resolve, reject) => {
-            snekfetch.get(`${this.apiBase}/repos/${owner}/${repo}/issues/${number}/comments`).then(res => {
-                resolve(res.body);
-            }).catch(err => {
-                reject(err);
-            });
+            snekfetch.get(`${this.apiBase}/repos/${owner}/${repo}/issues/${number}/comments`, {
+                headers: {
+                    Authorization: `token ${this.token}`,
+                },
+            })
+            .then(res => resolve(res.body))
+            .catch(err => reject(err));
         });
     }
 }
