@@ -16,7 +16,7 @@ module.exports = (bot, msg) => {
     try {
         cmd.execute(msg, args);
     } catch (e) {
-		const errorEmbed = createErrorEmbed(this.bot, e)
+		const errorEmbed = createErrorEmbed(bot, e)
 		msg.channel.send(errorEmbed);
     }
 };
