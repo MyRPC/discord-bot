@@ -71,20 +71,20 @@ class Issues extends BaseCommand {
 				break;
 			case 'repo':
 				const repoName = args.shift();
-				let { data: issues } = await this.bot.octokit.issues.listForRepo({
+				let { data: issues2 } = await this.bot.octokit.issues.listForRepo({
 					owner: 'MyRPC',
 					repo: repoName
 				});
-				const embeds = [];
-				issues = issues.filter(i => i.state === 'open' && !i.pull_request);
-				let issueFields = [];
+				const embeds2 = [];
+				issues2 = issues2.filter(i => i.state === 'open' && !i.pull_request);
+				let issueFields2 = [];
 
-				for (const issue of issues) issueFields.push({
+				for (const issue of issues2) issueFields2.push({
 					name: `[MyRPC/${repoName}] - #${issue.number}: ${issue.title}`,
 					value: `${truncateString(issue.body, 300)}\n**[View On GitHub](${issue.html_url})**`,
 				});
 
-				issueFields = chunk(issueFields, 10);
+				issueFields2 = chunk(issueFields, 10);
 
 				let page = 1;
 				for (const issueList of issueFields) {
@@ -97,13 +97,13 @@ class Issues extends BaseCommand {
 					
 					for (const issue of issueList) embed.addField(issue.name, issue.value);
 					
-					embeds.push(embed);
+					embeds2.push(embed);
 					
 					page++;
 				}
 				
 				new EmbedsMode()
-				.setArray(embeds)
+				.setArray(embeds2)
 				.setAuthorizedUsers([msg.author.id])
 				.setChannel(msg.channel)
 				.build();
