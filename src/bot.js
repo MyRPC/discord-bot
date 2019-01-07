@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const Discord = require('discord.js');
 const Octokit = require('@octokit/rest');
+const chunk = require('lodash.chunk');
 
 const createErrorEmbed = require('./Utils/createErrorEmbed');
 
@@ -22,7 +23,7 @@ class Bot {
         this.discordClient.login(this.config.token);
 
         process.on('unhandledRejection', err => {
-            const errorEmbed = createErrorEmbed(this, err);
+            const errorEmbed = createErrorEmbed(this);
             this.discordClient.channels.get(this.config.errorChannel).send(errorEmbed);
         });
 
