@@ -10,7 +10,7 @@ class GithubApi {
             const buffer = await promisify(randomBytes)(48);
             const loginId = buffer.toString('hex');
 
-            const res = await snekfetch.post(`${this.apiBase}/authorzations`, {
+            const res = await snekfetch.post(`${this.apiBase}/authorizations`, {
                 data: {
                     scopes: [
                         'repo',
