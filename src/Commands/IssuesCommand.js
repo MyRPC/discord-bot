@@ -26,11 +26,13 @@ class Issues extends BaseCommand {
 
 	execute(msg, args) {
 		if (!args) return msg.channel.send(`You must use a valid subcommand. Do **${this.bot.config.prefix}issues help** for a list of commands.`);
-		const { data: org } = await this.bot.octokit.orgs.get({
-			org: 'MyRPC'
-		})
-		this.ghOrg = org;
-		
+		(async () => {
+			const { data: org } = await this.bot.octokit.orgs.get({
+				org: 'MyRPC'
+			});
+			this.ghOrg = org;
+		})();
+
 		switch (args.shift().toLowerCase()) {
 			case 'all':
 				(async () => {
