@@ -24,7 +24,7 @@ class Issues extends BaseCommand {
 		this.github = new GithubApi(bot.config.apis.github.clientId, bot.config.apis.github.clientSecret);
 	}
 
-	execute(msg, args) {
+	async execute(msg, args) {
 		if (!args) return msg.channel.send(`You must use a valid subcommand. Do **${this.bot.config.prefix}issues help** for a list of commands.`);
 		this.github.getOrg('MyRPC').then(org => {
 			this.ghOrg = org;
@@ -35,103 +35,102 @@ class Issues extends BaseCommand {
 		
 		switch (args.shift().toLowerCase()) {
 			case 'all':
-				this.github.getOrgIssues('MyRPC').then(issues => {
-					const embeds = [];
-					issues = issues.filter(i => i.state === 'open' && !i.pull_request);
-					const issueFields = [];
-
-					for (const issue of issues) issueFields.push({
-						name: `[${issue.repository.full_name}] - #${issue.number}: ${issue.title}`,
-						value: `${truncateString(issue.body, 300)}\n**[View On GitHub](${issue.html_url})**`,
-					});
-
-					issueFields = chunk(issueFields, 10);
-
-					const page = 1;
-					for (const issueList of issueFields) {
-						const embed = new RichEmbed();
-						
-						embed.setColor(this.bot.config.embedColor);
-						embed.setTitle(`MyRPC Issues - Page ${page}`);
-						embed.setFooter(`© MyRPC | Page ${page}`, this.bot.discordClient.user.displayAvatarURL);
-						embed.setThumbnail(this.ghOrg.avatar_url);
-						
-						for (const issue of issueList) embed.addField(issue.name, issue.value);
-						
-						embeds.push(embed);
-					}
-					
-					new EmbedsMode()
-						.setArray(embeds)
-						.setAuthorizedUsers([msg.author.id])
-						.setChannel(msg.channel)
-						.build();
-				}).catch(e => {
-					const errorEmbed = createErrorEmbed(this.bot, e)
-					msg.channel.send(errorEmbed);
+				let {data: issues } = await this.bot.octokit.issues.listForOrg({
+					org: 'MyRPC', 
+					state: 'open'
 				});
+
+				const embeds = [];
+				issues = issues.filter(i => i.state === 'open' && !i.pull_request);
+				const issueFields = [];
+
+				for (const issue of issues) issueFields.push({
+					name: `[${issue.repository.full_name}] - #${issue.number}: ${issue.title}`,
+					value: `${truncateString(issue.body, 300)}\n**[View On GitHub](${issue.html_url})**`,
+				});
+
+				issueFields = chunk(issueFields, 10);
+
+				const page = 1;
+				for (const issueList of issueFields) {
+					const embed = new RichEmbed();
+					
+					embed.setColor(this.bot.config.embedColor);
+					embed.setTitle(`MyRPC Issues - Page ${page}`);
+					embed.setFooter(`© MyRPC | Page ${page}`, this.bot.discordClient.user.displayAvatarURL);
+					embed.setThumbnail(this.ghOrg.avatar_url);
+					
+					for (const issue of issueList) embed.addField(issue.name, issue.value);
+					
+					embeds.push(embed);
+				}
+				
+				new EmbedsMode()
+				.setArray(embeds)
+				.setAuthorizedUsers([msg.author.id])
+				.setChannel(msg.channel)
+				.build();
 				break;
 			case 'repo':
 				const repoName = args.shift();
-				this.github.getRepoIssues('MyRPC', repoName).then(issues => {
-					const embeds = [];
-					issues = issues.filter(i => i.state === 'open' && !i.pull_request);
-					let issueFields = [];
-
-					for (const issue of issues) issueFields.push({
-						name: `[MyRPC/${repoName}] - #${issue.number}: ${issue.title}`,
-						value: `${truncateString(issue.body, 300)}\n**[View On GitHub](${issue.html_url})**`,
-					});
-
-					issueFields = chunk(issueFields, 10);
-
-					let page = 1;
-					for (const issueList of issueFields) {
-						const embed = new RichEmbed();
-						
-						embed.setColor(this.bot.config.embedColor);
-						embed.setTitle(`MyRPC/${repoName} Issues - Page ${page}`);
-						embed.setFooter(`© MyRPC | Page ${page}`, this.bot.discordClient.user.displayAvatarURL);
-						embed.setThumbnail(this.ghOrg.avatar_url);
-						
-						for (const issue of issueList) embed.addField(issue.name, issue.value);
-						
-						embeds.push(embed);
-						
-						page++;
-					}
-					
-					new EmbedsMode()
-						.setArray(embeds)
-						.setAuthorizedUsers([msg.author.id])
-						.setChannel(msg.channel)
-						.build();
-				}).catch(e => {
-					const errorEmbed = createErrorEmbed(this.bot, e)
-					msg.channel.send(errorEmbed);
+				let { data: issues } = await this.bot.octokit.issues.listForRepo({
+					owner: 'MyRPC',
+					repo: repoName
 				});
+				const embeds = [];
+				issues = issues.filter(i => i.state === 'open' && !i.pull_request);
+				let issueFields = [];
+
+				for (const issue of issues) issueFields.push({
+					name: `[MyRPC/${repoName}] - #${issue.number}: ${issue.title}`,
+					value: `${truncateString(issue.body, 300)}\n**[View On GitHub](${issue.html_url})**`,
+				});
+
+				issueFields = chunk(issueFields, 10);
+
+				let page = 1;
+				for (const issueList of issueFields) {
+					const embed = new RichEmbed();
+					
+					embed.setColor(this.bot.config.embedColor);
+					embed.setTitle(`MyRPC/${repoName} Issues - Page ${page}`);
+					embed.setFooter(`© MyRPC | Page ${page}`, this.bot.discordClient.user.displayAvatarURL);
+					embed.setThumbnail(this.ghOrg.avatar_url);
+					
+					for (const issue of issueList) embed.addField(issue.name, issue.value);
+					
+					embeds.push(embed);
+					
+					page++;
+				}
+				
+				new EmbedsMode()
+				.setArray(embeds)
+				.setAuthorizedUsers([msg.author.id])
+				.setChannel(msg.channel)
+				.build();
 				break;
 			case 'get':
 				const repoName2 = args.shift();
 				const issueNumber = args.shift();
-				this.github.getIssueFromRepo('MyRPC', repoName2, issueNumber).then(issue => {
-					const embed = new RichEmbed();
-					embed.setURL(issue.html_url);
-					embed.setTitle(`[MyRPC/${repoName2}] - #${issueNumber}: ${issue.title}`);
-					embed.setDescription(truncateString(issue.body, 1022));
-					embed.setColor(this.bot.config.embedColor);
-					embed.setAuthor(issue.user.login, issue.user.avatar_url, issue.user.html_url);
-					embed.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL);
-					embed.addField('Comments', issue.comments, true);
-					embed.addField('Locked?', issue.locked ? 'Yes' : 'No', true);
-					if (issue.locked) embed.addField('Lock Reason', issue.active_lock_reason);
-					embed.addField('Labels', issue.labels.length ? issue.labels.map(l => `\`${l.name}\``).join(', ') : 'None');
-					
-					msg.channel.send(embed);
-				}).catch(e => {
-					const errorEmbed = createErrorEmbed(this.bot, e)
-					msg.channel.send(errorEmbed);
+				const { data: issue } = await this.octokit.issues.get({
+					owner: 'MyRPC', 
+					repo: repoName2,
+					number: issueNumber
 				});
+				const embed = new RichEmbed();
+				embed.setURL(issue.html_url);
+				embed.setTitle(`[MyRPC/${repoName2}] - #${issueNumber}: ${issue.title}`);
+				embed.setDescription(truncateString(issue.body, 1022));
+				embed.setColor(this.bot.config.embedColor);
+				embed.setAuthor(issue.user.login, issue.user.avatar_url, issue.user.html_url);
+				embed.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL);
+				embed.addField('Comments', issue.comments, true);
+				embed.addField('Locked?', issue.locked ? 'Yes' : 'No', true);
+				if (issue.locked) embed.addField('Lock Reason', issue.active_lock_reason);
+				embed.addField('Labels', issue.labels.length ? issue.labels.map(l => `\`${l.name}\``).join(', ') : 'None');
+				
+				msg.channel.send(embed);
 				break;
 			case 'help':
 				const embed = new RichEmbed();

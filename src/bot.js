@@ -10,6 +10,9 @@ class Bot {
         this.commands = new Discord.Collection();
         this.aliases = new Discord.Collection();
 
+        this.octokit = null;
+        this.initGithub();
+
         this.loadCommands();
         this.loadEvents();
 
@@ -47,6 +50,15 @@ class Bot {
                 console.log(`Bound event: ${eventName}`);
                 delete require.cache[require.resolve(`./Events/${file}`)];
             }
+        });
+    }
+
+    initGithub() {
+        this.octokit = new Octokit()
+        this.octokit.authenticate({
+            type: 'oauth',
+            key: this.config.apis.github.clientId,
+            secret: this.config.apis.github.clientSecret,
         });
     }
 }

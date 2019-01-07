@@ -11,8 +11,6 @@ class NotificationsPlugin {
 		this.app = express();
 		this.app.use(bodyParser.json());
 		this.app.listen(port);
-
-		this.github = new GithubApi(bot.config.apis.github.clientId, bot.config.apis.github.clientSecret);
 	}
 	
 	initReddit() {
@@ -54,10 +52,6 @@ class NotificationsPlugin {
 							embed.setAuthor('GitHub', 'https://i.railrunner16.me/gbc3lr1.png');
 							embed.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL);
 							embed.addField('Opened By', `[${eventData.sender.login}](${eventData.sender.html_url})`, true)
-
-							this.github.getIssueComments('MyRPC', eventData.repository.name, eventData.issue.number).then(comments => {
-								embed.addField('Comments', comments.length.toString());
-							}).catch(e => console.warn);
 							break;
 						default:
 							res.sendStatus(200);

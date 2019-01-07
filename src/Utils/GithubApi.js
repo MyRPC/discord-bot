@@ -1,3 +1,5 @@
+// DEPRECATED: Using Octokit
+
 const snekfetch = require('snekfetch');
 const { randomBytes } = require('crypto');
 const { promisify } = require('util');
