@@ -27,7 +27,7 @@ class GithubApi {
         });
     }
 
-    getAllIssuesFromOrg(org) {
+    getOrgIssues(org) {
         return new Promise((resolve, reject) => {
             snekfetch
             .get(`${this.apiBase}/orgs/${org}/issues`, {
@@ -40,10 +40,10 @@ class GithubApi {
         });
     }
 
-    getAllIssuesFromRepo(user, repo) {
+    getRepoIssues(owner, repo) {
         return new Promise((resolve, reject) => {
             snekfetch
-            .get(`${this.apiBase}/repos/${user}/${repo}/issues`, {
+            .get(`${this.apiBase}/repos/${owner}/${repo}/issues`, {
                 headers: {
                     Authorization: `token ${this.token}`,
                 },
@@ -53,10 +53,10 @@ class GithubApi {
         });
     }
 
-    getAllIssuesFromRepoByNumber(user, repo, number) {
+    getIssue(owner, repo, number) {
         return new Promise((resolve, reject) => {
             snekfetch
-            .get(`${this.apiBase}/repos/${user}/${repo}/issues/${number}`, {
+            .get(`${this.apiBase}/repos/${owner}/${repo}/issues/${number}`, {
                 headers: {
                     Authorization: `token ${this.token}`,
                 },
@@ -76,6 +76,16 @@ class GithubApi {
             })
             .then(res => resolve(res.body))
             .catch(err => reject(err));
+        });
+    }
+
+    getIssueComments(owner, repo, number) {
+        return new Promise((resolve, reject) => {
+            snekfetch.get(`${this.apiBase}/repos/${owner}/${repo}/issues/${number}/comments`).then(res => {
+                resolve(res.body);
+            }).catch(err => {
+                reject(err);
+            });
         });
     }
 }

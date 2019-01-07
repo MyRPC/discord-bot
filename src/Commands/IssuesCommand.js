@@ -35,7 +35,7 @@ class Issues extends BaseCommand {
 		
 		switch (args.shift().toLowerCase()) {
 			case 'all':
-				this.github.getAllIssuesFromOrg('MyRPC').then(issues => {
+				this.github.getOrgIssues('MyRPC').then(issues => {
 					const embeds = [];
 					issues = issues.filter(i => i.state === 'open' && !i.pull_request);
 					const issueFields = [];
@@ -73,7 +73,7 @@ class Issues extends BaseCommand {
 				break;
 			case 'repo':
 				const repoName = args.shift();
-				this.github.getAllIssuesFromRepo('MyRPC', repoName).then(issues => {
+				this.github.getRepoIssues('MyRPC', repoName).then(issues => {
 					const embeds = [];
 					issues = issues.filter(i => i.state === 'open' && !i.pull_request);
 					let issueFields = [];
@@ -114,7 +114,7 @@ class Issues extends BaseCommand {
 			case 'get':
 				const repoName2 = args.shift();
 				const issueNumber = args.shift();
-				this.github.getAllIssuesFromRepoByNumber('MyRPC', repoName2, issueNumber).then(issue => {
+				this.github.getIssueFromRepo('MyRPC', repoName2, issueNumber).then(issue => {
 					const embed = new RichEmbed();
 					embed.setURL(issue.html_url);
 					embed.setTitle(`[MyRPC/${repoName2}] - #${issueNumber}: ${issue.title}`);
