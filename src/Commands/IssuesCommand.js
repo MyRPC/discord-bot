@@ -1,9 +1,7 @@
 const BaseCommand = require('../Structures/BaseCommand');
 const truncateString = require('../Utils/truncateString');
 const createErrorEmbed = require('../Utils/createErrorEmbed');
-const GithubApi = require('../Utils/GithubApi');
 
-const snekfetch = require('snekfetch');
 const { RichEmbed } = require('discord.js');
 const { Embeds: EmbedsMode } = require('discord-paginationembed');
 const chunk = require('lodash.chunk');
@@ -21,7 +19,6 @@ class Issues extends BaseCommand {
 		});
 		this.bot = bot;
 		this.ghOrg = null;
-		this.github = new GithubApi(bot.config.apis.github.clientId, bot.config.apis.github.clientSecret);
 	}
 
 	execute(msg, args) {
@@ -29,6 +26,9 @@ class Issues extends BaseCommand {
 		(async () => {
 			const { data: org } = await this.bot.octokit.orgs.get({
 				org: 'MyRPC'
+			}).catch(e => {
+				const errorEmbed = createErrorEmbed(this.bot, e);
+				msg.channel.send(errorEmbed);
 			});
 			this.ghOrg = org;
 		})();
@@ -37,8 +37,10 @@ class Issues extends BaseCommand {
 			case 'all':
 				(async () => {
 					let { data: issues } = await this.bot.octokit.issues.listForOrg({
-						org: 'MyRPC', 
-						state: 'open'
+						org: 'MyRPC'
+					}).catch(e => {
+						const errorEmbed = createErrorEmbed(this.bot, e);
+						msg.channel.send(errorEmbed);
 					});
 	
 					const embeds = [];
@@ -79,7 +81,11 @@ class Issues extends BaseCommand {
 					let { data: issues } = await this.bot.octokit.issues.listForRepo({
 						owner: 'MyRPC',
 						repo: repoName
+					}).catch(e => {
+						const errorEmbed = createErrorEmbed(this.bot, e);
+						msg.channel.send(errorEmbed);
 					});
+
 					const embeds = [];
 					issues = issues.filter(i => i.state === 'open' && !i.pull_request);
 					let issueFields = [];
@@ -122,7 +128,11 @@ class Issues extends BaseCommand {
 						owner: 'MyRPC', 
 						repo: repoName,
 						number: issueNumber
+					}).catch(e => {
+						const errorEmbed = createErrorEmbed(this.bot, e);
+						msg.channel.send(errorEmbed);
 					});
+
 					const embed = new RichEmbed();
 					embed.setURL(issue.html_url);
 					embed.setTitle(`[MyRPC/${repoName}] - #${issueNumber}: ${issue.title}`);
