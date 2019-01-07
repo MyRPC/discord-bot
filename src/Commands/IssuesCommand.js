@@ -24,7 +24,7 @@ class Issues extends BaseCommand {
 		this.github = new GithubApi(bot.config.apis.github.clientId, bot.config.apis.github.clientSecret);
 	}
 
-	async execute(msg, args) {
+	execute(msg, args) {
 		if (!args) return msg.channel.send(`You must use a valid subcommand. Do **${this.bot.config.prefix}issues help** for a list of commands.`);
 		const { data: org } = await this.bot.octokit.orgs.get({
 			org: 'MyRPC'
@@ -33,7 +33,7 @@ class Issues extends BaseCommand {
 		
 		switch (args.shift().toLowerCase()) {
 			case 'all':
-				(() => {
+				(async () => {
 					let { data: issues } = await this.bot.octokit.issues.listForOrg({
 						org: 'MyRPC', 
 						state: 'open'
@@ -72,7 +72,7 @@ class Issues extends BaseCommand {
 				})();
 				break;
 			case 'repo':
-				(() => {
+				(async () => {
 					const repoName = args.shift();
 					let { data: issues } = await this.bot.octokit.issues.listForRepo({
 						owner: 'MyRPC',
@@ -113,26 +113,28 @@ class Issues extends BaseCommand {
 				})();
 				break;
 			case 'get':
-				const repoName2 = args.shift();
-				const issueNumber = args.shift();
-				const { data: issue } = await this.octokit.issues.get({
-					owner: 'MyRPC', 
-					repo: repoName2,
-					number: issueNumber
-				});
-				const embed = new RichEmbed();
-				embed.setURL(issue.html_url);
-				embed.setTitle(`[MyRPC/${repoName2}] - #${issueNumber}: ${issue.title}`);
-				embed.setDescription(truncateString(issue.body, 1022));
-				embed.setColor(this.bot.config.embedColor);
-				embed.setAuthor(issue.user.login, issue.user.avatar_url, issue.user.html_url);
-				embed.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL);
-				embed.addField('Comments', issue.comments, true);
-				embed.addField('Locked?', issue.locked ? 'Yes' : 'No', true);
-				if (issue.locked) embed.addField('Lock Reason', issue.active_lock_reason);
-				embed.addField('Labels', issue.labels.length ? issue.labels.map(l => `\`${l.name}\``).join(', ') : 'None');
-				
-				msg.channel.send(embed);
+				(async () => {
+					const repoName = args.shift();
+					const issueNumber = args.shift();
+					const { data: issue } = await this.octokit.issues.get({
+						owner: 'MyRPC', 
+						repo: repoName,
+						number: issueNumber
+					});
+					const embed = new RichEmbed();
+					embed.setURL(issue.html_url);
+					embed.setTitle(`[MyRPC/${repoName}] - #${issueNumber}: ${issue.title}`);
+					embed.setDescription(truncateString(issue.body, 1022));
+					embed.setColor(this.bot.config.embedColor);
+					embed.setAuthor(issue.user.login, issue.user.avatar_url, issue.user.html_url);
+					embed.setFooter('© MyRPC', this.bot.discordClient.user.displayAvatarURL);
+					embed.addField('Comments', issue.comments, true);
+					embed.addField('Locked?', issue.locked ? 'Yes' : 'No', true);
+					if (issue.locked) embed.addField('Lock Reason', issue.active_lock_reason);
+					embed.addField('Labels', issue.labels.length ? issue.labels.map(l => `\`${l.name}\``).join(', ') : 'None');
+					
+					msg.channel.send(embed);
+				})();
 				break;
 			case 'help':
 				const embed = new RichEmbed();
