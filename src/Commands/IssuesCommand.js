@@ -33,80 +33,84 @@ class Issues extends BaseCommand {
 		
 		switch (args.shift().toLowerCase()) {
 			case 'all':
-				let { data: issues } = await this.bot.octokit.issues.listForOrg({
-					org: 'MyRPC', 
-					state: 'open'
-				});
-
-				const embeds = [];
-				issues = issues.filter(i => i.state === 'open' && !i.pull_request);
-				const issueFields = [];
-
-				for (const issue of issues) issueFields.push({
-					name: `[${issue.repository.full_name}] - #${issue.number}: ${issue.title}`,
-					value: `${truncateString(issue.body, 300)}\n**[View On GitHub](${issue.html_url})**`,
-				});
-
-				issueFields = chunk(issueFields, 10);
-
-				const page = 1;
-				for (const issueList of issueFields) {
-					const embed = new RichEmbed();
+				(() => {
+					let { data: issues } = await this.bot.octokit.issues.listForOrg({
+						org: 'MyRPC', 
+						state: 'open'
+					});
+	
+					const embeds = [];
+					issues = issues.filter(i => i.state === 'open' && !i.pull_request);
+					const issueFields = [];
+	
+					for (const issue of issues) issueFields.push({
+						name: `[${issue.repository.full_name}] - #${issue.number}: ${issue.title}`,
+						value: `${truncateString(issue.body, 300)}\n**[View On GitHub](${issue.html_url})**`,
+					});
+	
+					issueFields = chunk(issueFields, 10);
+	
+					const page = 1;
+					for (const issueList of issueFields) {
+						const embed = new RichEmbed();
+						
+						embed.setColor(this.bot.config.embedColor);
+						embed.setTitle(`MyRPC Issues - Page ${page}`);
+						embed.setFooter(`© MyRPC | Page ${page}`, this.bot.discordClient.user.displayAvatarURL);
+						embed.setThumbnail(this.ghOrg.avatar_url);
+						
+						for (const issue of issueList) embed.addField(issue.name, issue.value);
+						
+						embeds.push(embed);
+					}
 					
-					embed.setColor(this.bot.config.embedColor);
-					embed.setTitle(`MyRPC Issues - Page ${page}`);
-					embed.setFooter(`© MyRPC | Page ${page}`, this.bot.discordClient.user.displayAvatarURL);
-					embed.setThumbnail(this.ghOrg.avatar_url);
-					
-					for (const issue of issueList) embed.addField(issue.name, issue.value);
-					
-					embeds.push(embed);
-				}
-				
-				new EmbedsMode()
-				.setArray(embeds)
-				.setAuthorizedUsers([msg.author.id])
-				.setChannel(msg.channel)
-				.build();
+					new EmbedsMode()
+					.setArray(embeds)
+					.setAuthorizedUsers([msg.author.id])
+					.setChannel(msg.channel)
+					.build();
+				})();
 				break;
 			case 'repo':
-				const repoName = args.shift();
-				let { data: issues2 } = await this.bot.octokit.issues.listForRepo({
-					owner: 'MyRPC',
-					repo: repoName
-				});
-				const embeds2 = [];
-				issues2 = issues2.filter(i => i.state === 'open' && !i.pull_request);
-				let issueFields2 = [];
+				(() => {
+					const repoName = args.shift();
+					let { data: issues } = await this.bot.octokit.issues.listForRepo({
+						owner: 'MyRPC',
+						repo: repoName
+					});
+					const embeds = [];
+					issues = issues.filter(i => i.state === 'open' && !i.pull_request);
+					let issueFields = [];
 
-				for (const issue of issues2) issueFields2.push({
-					name: `[MyRPC/${repoName}] - #${issue.number}: ${issue.title}`,
-					value: `${truncateString(issue.body, 300)}\n**[View On GitHub](${issue.html_url})**`,
-				});
+					for (const issue of issues) issueFields.push({
+						name: `[MyRPC/${repoName}] - #${issue.number}: ${issue.title}`,
+						value: `${truncateString(issue.body, 300)}\n**[View On GitHub](${issue.html_url})**`,
+					});
 
-				issueFields2 = chunk(issueFields, 10);
+					issueFields = chunk(issueFields, 10);
 
-				let page2 = 1;
-				for (const issueList of issueFields) {
-					const embed = new RichEmbed();
+					let page = 1;
+					for (const issueList of issueFields) {
+						const embed = new RichEmbed();
+						
+						embed.setColor(this.bot.config.embedColor);
+						embed.setTitle(`MyRPC/${repoName} Issues - Page ${page}`);
+						embed.setFooter(`© MyRPC | Page ${page}`, this.bot.discordClient.user.displayAvatarURL);
+						embed.setThumbnail(this.ghOrg.avatar_url);
+						
+						for (const issue of issueList) embed.addField(issue.name, issue.value);
+						
+						embeds.push(embed);
+						
+						page++;
+					}
 					
-					embed.setColor(this.bot.config.embedColor);
-					embed.setTitle(`MyRPC/${repoName} Issues - Page ${page2}`);
-					embed.setFooter(`© MyRPC | Page ${page2}`, this.bot.discordClient.user.displayAvatarURL);
-					embed.setThumbnail(this.ghOrg.avatar_url);
-					
-					for (const issue of issueList) embed.addField(issue.name, issue.value);
-					
-					embeds2.push(embed);
-					
-					page2++;
-				}
-				
-				new EmbedsMode()
-				.setArray(embeds2)
-				.setAuthorizedUsers([msg.author.id])
-				.setChannel(msg.channel)
-				.build();
+					new EmbedsMode()
+					.setArray(embeds)
+					.setAuthorizedUsers([msg.author.id])
+					.setChannel(msg.channel)
+					.build();
+				})();
 				break;
 			case 'get':
 				const repoName2 = args.shift();
