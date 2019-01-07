@@ -5,6 +5,7 @@ module.exports = {
     staffRole: 'Staff',
     prefix: '!',
 	embedColor: '#7892da',
+	errorChannel: '',
 	apis: {
 		github: {
 			clientId: '',

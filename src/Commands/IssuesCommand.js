@@ -124,7 +124,7 @@ class Issues extends BaseCommand {
 				(async () => {
 					const repoName = args.shift();
 					const issueNumber = args.shift();
-					const { data: issue } = await this.octokit.issues.get({
+					const { data } = await this.octokit.issues.get({
 						owner: 'MyRPC', 
 						repo: repoName,
 						number: issueNumber
@@ -132,6 +132,8 @@ class Issues extends BaseCommand {
 						const errorEmbed = createErrorEmbed(this.bot, e);
 						msg.channel.send(errorEmbed);
 					});
+
+					const issue = data;
 
 					const embed = new RichEmbed();
 					embed.setURL(issue.html_url);

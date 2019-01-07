@@ -3,6 +3,8 @@ const path = require('path');
 const Discord = require('discord.js');
 const Octokit = require('@octokit/rest');
 
+const createErrorEmbed = require('./Utils/createErrorEmbed');
+
 class Bot {
     constructor(configPath) {
         this.config = require(configPath);
@@ -18,6 +20,16 @@ class Bot {
         this.loadEvents();
 
         this.discordClient.login(this.config.token);
+
+        process.on('unhandledRejection', err => {
+            const errorEmbed = createErrorEmbed(this, err);
+            this.discordClient.channels.get(this.config.errorChannel).send(errorEmbed);
+        });
+
+        process.on('uncaughtException', err => {
+            const errorEmbed = createErrorEmbed(this, err);
+            this.discordClient.channels.get(this.config.errorChannel).send(errorEmbed);
+        });
     }
 
     loadCommands() {
