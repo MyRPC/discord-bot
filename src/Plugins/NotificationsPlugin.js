@@ -13,14 +13,9 @@ class NotificationsPlugin {
 	
 	initReddit() {
 		this.app.post('/webhooks/reddit/:channel', (req, res) => {
-			const embed = new RichEmbed(req.body);
-			embed.setColor(this.bot.config.embedColor);
-			embed.setAuthor('Reddit', 'https://i.railrunner16.me/xzAam9h.png');
-			embed.setFooter('© MyRPC | Posted At', this.bot.discordClient.user.displayAvatarURL);
-			
 			const channel = this.bot.discordClient.channels.get(req.params.channel);
 			
-			channel.send(embed).then(msg => {
+			channel.send(req.body.url).then(msg => {
 				res.status(200).json({
 					message: 'success',
 					sent: msg,
